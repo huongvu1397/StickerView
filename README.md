@@ -16,32 +16,32 @@ Gradle
 ------
 ```
 allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
+}
 
-	dependencies {
-	        compile 'com.github.shashi180493:StickerView:1.0'
-	}
+dependencies {
+	compile 'com.github.shashi180493:StickerView:1.0'
+}
  
 ```
 Maven
 -----
 ```
 <repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+	<repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository>
+</repositories>
 
 <dependency>
-	    <groupId>com.github.shashi180493</groupId>
-	    <artifactId>StickerView</artifactId>
-	    <version>1.0</version>
-	</dependency>
+	<groupId>com.github.shashi180493</groupId>
+	<artifactId>StickerView</artifactId>
+	<version>1.0</version>
+</dependency>
 ```
 
 Usage
