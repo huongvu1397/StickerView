@@ -1,5 +1,7 @@
 StickerView
 ===========
+[![](https://jitpack.io/v/shashi180493/StickerView.svg)](https://jitpack.io/#shashi180493/StickerView)
+
 Android fully customizable StickerView which can add sticker(text/drawable) and zoom, drag, flip, delete it.
 
 You can copy the source code to your project so you can design your own function.
