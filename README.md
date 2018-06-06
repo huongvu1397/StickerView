@@ -1,3 +1,2 @@
-# StickerView
 StickerView
 ===========
