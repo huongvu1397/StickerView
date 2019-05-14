@@ -432,19 +432,36 @@ public class StickerView extends FrameLayout {
   }
 
   public void zoomAndRotateCurrentSticker(@NonNull MotionEvent event) {
-    zoomAndRotateSticker(handlingSticker, event);
+    //zoomAndRotateSticker(handlingSticker, event);
   }
 
   public void zoomAndRotateSticker(@Nullable Sticker sticker, @NonNull MotionEvent event) {
     if (sticker != null) {
+      downMatrix.set(handlingSticker.getMatrix());
       float newDistance = calculateDistance(midPoint.x, midPoint.y, event.getX(), event.getY());
       float newRotation = calculateRotation(midPoint.x, midPoint.y, event.getX(), event.getY());
-
+      Log.e("HVV1312","OK ???: "+midPoint.x + " va " + event.getX());
       moveMatrix.set(downMatrix);
       moveMatrix.postScale(newDistance / oldDistance, newDistance / oldDistance, midPoint.x,
           midPoint.y);
       moveMatrix.postRotate(newRotation - oldRotation, midPoint.x, midPoint.y);
       handlingSticker.setMatrix(moveMatrix);
+    }
+  }
+
+  public void customeZoomAndRotateSticker(@Nullable Sticker sticker,int x,int y,int m,int n) {
+    if (sticker != null) {
+
+      float oldD = calculateDistance(midPoint.x, midPoint.y, m, n);
+      Log.e("HVV1312","mid Point : "+midPoint.x+ " va "+ midPoint.y +  " va va va m: "+m+" va n: "+n );
+      float newDistance = calculateDistance(midPoint.x, midPoint.y,x,y);
+      moveMatrix.set(downMatrix);
+      moveMatrix.postScale(newDistance / oldD, newDistance / oldD, midPoint.x,
+              midPoint.y);
+      if(handlingSticker!=null) {
+        handlingSticker.setMatrix(moveMatrix);
+      }
+      invalidate();
     }
   }
 
@@ -561,6 +578,15 @@ public class StickerView extends FrameLayout {
 
     return (float) Math.sqrt(x * x + y * y);
   }
+
+  protected float calculateDistance2(float x1, float y1, float x2, float y2) {
+    double x = x1 - x2;
+    double y = y1 - y2;
+
+    return (float) Math.sqrt(x * x + y * y);
+  }
+
+
 
   @Override
   protected void onSizeChanged(int w, int h, int oldW, int oldH) {

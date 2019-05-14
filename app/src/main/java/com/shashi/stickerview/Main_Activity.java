@@ -8,10 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.text.Layout;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.shashi.mysticker.BitmapStickerIcon;
@@ -33,7 +36,7 @@ public class Main_Activity extends Activity {
     StickerView sticker_view;
     private TextSticker sticker;
     Button btn_reset, btn_replace, btn_remove, btn_removeall, btn_lock, btn_add;
-
+    AppCompatSeekBar seek_bar;
     String TAG = getClass().getSimpleName();
     public static final int PERM_RQST_CODE = 110;
 
@@ -50,7 +53,7 @@ public class Main_Activity extends Activity {
         btn_removeall = (Button) findViewById(R.id.btn_removeall);
         btn_lock = (Button) findViewById(R.id.btn_lock);
         btn_add = (Button) findViewById(R.id.btn_add);
-
+        seek_bar  = findViewById(R.id.seek_bar);
         BitmapStickerIcon deleteIcon = new BitmapStickerIcon(ContextCompat.getDrawable(this,
                 R.drawable.ic_close),
                 BitmapStickerIcon.LEFT_TOP);
@@ -86,6 +89,8 @@ public class Main_Activity extends Activity {
         sticker.setTextColor(Color.BLACK);
         sticker.setTextAlign(Layout.Alignment.ALIGN_CENTER);
         sticker.resizeText();
+
+
 
         sticker_view.setOnStickerOperationListener(new StickerView.OnStickerOperationListener() {
             @Override
@@ -192,6 +197,8 @@ public class Main_Activity extends Activity {
         sticker_view.addSticker(new DrawableSticker(drawable1), Sticker.Position.BOTTOM | Sticker
                 .Position.RIGHT);
 
+
+
         Drawable bubble = ContextCompat.getDrawable(this, R.drawable.bubble);
         sticker_view.addSticker(
                 new TextSticker(getApplicationContext())
@@ -241,8 +248,31 @@ public class Main_Activity extends Activity {
         sticker.setTextAlign(Layout.Alignment.ALIGN_CENTER);
         sticker.resizeText();
         //sticker.setTypeface(Typeface.DEFAULT_BOLD);
-
-
         sticker_view.addSticker(sticker);
+
+
+        seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                int[] location = new int[2];
+                sticker_view.getLocationOnScreen(location);
+                Log.e("HVV1312Location"," location 0  "+location[0]+"location 1 "+location[1]);
+                sticker_view.customeZoomAndRotateSticker(sticker,(location[0]*i)/100,(location[1]*i)/100,location[0],location[1]);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
     }
+
+
 }

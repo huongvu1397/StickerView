@@ -40,6 +40,10 @@ public class BitmapStickerIcon extends DrawableSticker implements StickerIconEve
     this.position = gravity;
   }
 
+  public BitmapStickerIcon(Drawable drawable){
+    super(drawable);
+  }
+
   public void draw(Canvas canvas, Paint paint) {
     canvas.drawCircle(x, y, iconRadius, paint);
     super.draw(canvas);

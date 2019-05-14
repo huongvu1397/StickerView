@@ -329,4 +329,80 @@ public class TextSticker extends Sticker {
   private float convertSpToPx(float scaledPixels) {
     return scaledPixels * context.getResources().getDisplayMetrics().scaledDensity;
   }
+
+  public TextSticker resizeText2(int width, int height) {
+    final int availableHeightPixels = textRect.height();
+
+    final int availableWidthPixels = textRect.width();
+
+    final CharSequence text = getText();
+
+    // Safety check
+    // (Do not resize if the view does not have dimensions or if there is no text)
+    if (text == null
+            || text.length() <= 0
+            || availableHeightPixels <= 0
+            || availableWidthPixels <= 0
+            || maxTextSizePixels <= 0) {
+      return this;
+    }
+
+    float targetTextSizePixels = maxTextSizePixels;
+    int targetTextHeightPixels =
+            getTextHeightPixels(text, availableWidthPixels, targetTextSizePixels);
+
+    // Until we either fit within our TextView
+    // or we have reached our minimum text size,
+    // incrementally try smaller sizes
+    while (targetTextHeightPixels > availableHeightPixels
+            && targetTextSizePixels > minTextSizePixels) {
+      targetTextSizePixels = Math.max(targetTextSizePixels - 2, minTextSizePixels);
+
+      targetTextHeightPixels =
+              getTextHeightPixels(text, availableWidthPixels, targetTextSizePixels);
+    }
+
+    // If we have reached our minimum text size and the text still doesn't fit,
+    // append an ellipsis
+    // (NOTE: Auto-ellipsize doesn't work hence why we have to do it here)
+    if (targetTextSizePixels == minTextSizePixels
+            && targetTextHeightPixels > availableHeightPixels) {
+      // Make a copy of the original TextPaint object for measuring
+      TextPaint textPaintCopy = new TextPaint(textPaint);
+      textPaintCopy.setTextSize(targetTextSizePixels);
+
+      // Measure using a StaticLayout instance
+      StaticLayout staticLayout =
+              new StaticLayout(text, textPaintCopy, availableWidthPixels, Layout.Alignment.ALIGN_NORMAL,
+                      lineSpacingMultiplier, lineSpacingExtra, false);
+
+      // Check that we have a least one line of rendered text
+      if (staticLayout.getLineCount() > 0) {
+        // Since the line at the specific vertical position would be cut off,
+        // we must trim up to the previous line and add an ellipsis
+        int lastLine = staticLayout.getLineForVertical(availableHeightPixels) - 1;
+
+        if (lastLine >= 0) {
+          int startOffset = staticLayout.getLineStart(lastLine);
+          int endOffset = staticLayout.getLineEnd(lastLine);
+          float lineWidthPixels = staticLayout.getLineWidth(lastLine);
+          float ellipseWidth = textPaintCopy.measureText(mEllipsis);
+
+          // Trim characters off until we have enough room to draw the ellipsis
+          while (availableWidthPixels < lineWidthPixels + ellipseWidth) {
+            endOffset--;
+            lineWidthPixels =
+                    textPaintCopy.measureText(text.subSequence(startOffset, endOffset + 1).toString());
+          }
+
+          setText(text.subSequence(0, endOffset) + mEllipsis);
+        }
+      }
+    }
+    textPaint.setTextSize(width);
+    staticLayout =
+            new StaticLayout(this.text, textPaint, textRect.width(), alignment, lineSpacingMultiplier,
+                    lineSpacingExtra, true);
+    return this;
+  }
 }
