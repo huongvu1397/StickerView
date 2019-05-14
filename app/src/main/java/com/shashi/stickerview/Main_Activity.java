@@ -251,6 +251,9 @@ public class Main_Activity extends Activity {
         sticker_view.addSticker(sticker);
 
 
+
+
+
         seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
